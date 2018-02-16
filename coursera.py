@@ -100,7 +100,7 @@ def output_courses_info_to_xlsx(datafile, courses_info):
             ])
         wb.save(filename=datafile)
     except PermissionError:
-        exit('Pls close default file or select another!!!')
+        print('Pls close default file or select another!!!')
 
 
 if __name__ == '__main__':
