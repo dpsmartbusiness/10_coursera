@@ -79,26 +79,33 @@ def get_courses_info(courses_list):
     return courses_info
 
 
-def output_courses_info_to_xlsx(datafile, courses_info):
+def output_courses_info_to_xlsx(courses_info):
+    wb = Workbook()
+    sheet = wb.active
+    sheet.title = 'Coursera information'
+    head_line = [
+        'Course Title',
+        'Language',
+        'Start Date',
+        'Duration',
+        'Rating'
+    ]
+    sheet.append(head_line)
+    for course_info in courses_info:
+        sheet.append([
+            course_info['title'],
+            course_info['language'],
+            course_info['startdate'],
+            course_info['duration'],
+            course_info['rating']
+        ])
+    return wb
+
+
+def save_datafile(wb):
     try:
-        wb = Workbook()
-        sheet = wb.active
-        sheet.title = 'Coursera information'
-        head_line = ['Course Title',
-                     'Language',
-                     'Start Date',
-                     'Duration',
-                     'Rating']
-        sheet.append(head_line)
-        for course_info in courses_info:
-            sheet.append([
-                course_info['title'],
-                course_info['language'],
-                course_info['startdate'],
-                course_info['duration'],
-                course_info['rating']
-            ])
-        wb.save(filename=datafile)
+        datafile = wb.save(args.datafile)
+        return datafile
     except PermissionError:
         print('Pls close default file or select another!!!')
 
@@ -111,5 +118,13 @@ if __name__ == '__main__':
     courses_urls = get_random_courses_list(content, args.total)
     courses_pages = get_courses_pages(courses_urls)
     courses_info = get_courses_info(courses_pages)
-    output_courses_info_to_xlsx(args.datafile, courses_info)
+    wb = output_courses_info_to_xlsx(courses_info)
+    datafile = save_datafile(wb)
+
+
+
+
+
+
+
 
