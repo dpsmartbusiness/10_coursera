@@ -23,7 +23,7 @@ def create_parser():
     return parser
 
 
-def get_content(url):
+def fetch_content(url):
     content = requests.get(url).content
     return content
 
@@ -102,9 +102,9 @@ def output_courses_info_to_xlsx(courses_info):
     return wb
 
 
-def save_datafile(wb):
+def save_datafile(wb, datafile):
     try:
-        datafile = wb.save(args.datafile)
+        datafile = wb.save(datafile)
         return datafile
     except PermissionError:
         print('Pls close default file or select another!!!')
@@ -114,17 +114,9 @@ if __name__ == '__main__':
     url = 'https://www.coursera.org/sitemap~www~courses.xml'
     parser = create_parser()
     args = parser.parse_args()
-    content = get_content(url)
+    content = fetch_content(url)
     courses_urls = get_random_courses_list(content, args.total)
     courses_pages = get_courses_pages(courses_urls)
     courses_info = get_courses_info(courses_pages)
     wb = output_courses_info_to_xlsx(courses_info)
-    datafile = save_datafile(wb)
-
-
-
-
-
-
-
-
+    datafile = save_datafile(wb, args.datafile)
